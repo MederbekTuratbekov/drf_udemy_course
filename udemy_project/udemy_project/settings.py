@@ -1,4 +1,4 @@
-# кошулду: медиа, STATIC_ROOT, 'modeltranslation',
+# кошулду: медиа, STATIC_ROOT, modeltranslation,
 
 
 import os
@@ -80,7 +80,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = ''
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Bishkek'
 
@@ -99,10 +99,12 @@ MODELTRANSLATION_LANGUAGES = ('en', 'ru')
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'udemy_app.UserProfile'
