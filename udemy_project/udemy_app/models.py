@@ -90,7 +90,7 @@ class Questions(models.Model):
 
 # вариянты ответов вопроса
 class Options(models.Model):
-    questions = models.ForeignKey(Options, on_delete=models.CASCADE)
+    questions = models.ForeignKey(Questions, on_delete=models.CASCADE)
     option_text = models.CharField(max_length=30)
     is_correct = models.BooleanField(default=False)
 
