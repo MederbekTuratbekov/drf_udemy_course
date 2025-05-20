@@ -1,20 +1,30 @@
-from rest_framework import routers
-from django.urls import path, include
-from .views import (StudentProfileListAPIView, TeacherProfileViewSet, CategoryListAPIView, CourseListApiView, LessonListApiView, CertificateListApiView,
+from django.urls import path
+from .views import (UserProfileListAPIView, UserProfileDetailListAPIView, CategoryListAPIView, ExamListApiView, ExamDetailListApiView,
+                    CourseListApiView, CourseDetailListApiView,
+                    LessonListApiView, CertificateListApiView,
                     ReviewListApiView, CartItemsListApiView, FavoriteItemsListApiView)
 
 
-router = routers.SimpleRouter()
-router.register(r'teacher_account/', TeacherProfileViewSet, basename='teacher_account') # не работает
-
-
 urlpatterns = [
-    path('student_account/', StudentProfileListAPIView.as_view(), name = 'student_accounts'),
-    path('category_list', CategoryListAPIView.as_view(), name='category_list'),
-    path('', CourseListApiView.as_view(), name='course_list'),
+
+    path('user/', UserProfileListAPIView.as_view(), name= 'users'),
+    path('user/<int:pk>/', UserProfileDetailListAPIView.as_view(), name= 'user_detail'),
+
+    path('category_list/', CategoryListAPIView.as_view(), name= 'category_list'),
+
+    path('course/', CourseListApiView.as_view(), name= 'course_list'),
+    path('course/<int:pk>/', CourseDetailListApiView.as_view(), name='course_detail'),
+
+    path('exam/', ExamListApiView.as_view(), name = 'exam_list'), # не работает
+    path('exam/<int:pk>/', ExamDetailListApiView.as_view(), name = 'exam_detail'),  # не работает
+
     path('lessons/', LessonListApiView.as_view(), name='lesson_list'),
+
     path('certificates/', CertificateListApiView.as_view(), name='certificate_list'),
+
     path('reviews/', ReviewListApiView.as_view(), name='review_list'),
-    path('cart_items/', CartItemsListApiView.as_view(), name='cart_items_list'),
-    path('favorite_items/', FavoriteItemsListApiView.as_view(), name='favorite_items_list'),
+
+    path('cart-items/', CartItemsListApiView.as_view(), name='cart_items_list'),
+
+    path('favorite-items/', FavoriteItemsListApiView.as_view(), name='favorite_items_list'),
 ]
