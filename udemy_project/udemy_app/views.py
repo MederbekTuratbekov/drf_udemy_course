@@ -23,17 +23,17 @@ class LessonListApiView(generics.ListAPIView):
     serializer_class = LessonSerializer
 
 class CertificateListApiView(generics.ListAPIView):
-    queryset = Certificate
+    queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
 
 class ReviewListApiView(generics.ListAPIView):
-    queryset = Review
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
 class CartItemsListApiView(generics.ListAPIView):
-    queryset = CartItems
+    queryset = CartItems.objects.all()
     serializer_class = CartItemsSerializer
 
 class FavoriteItemsListApiView(generics.ListAPIView):
-    queryset = FavoriteItems
+    queryset = FavoriteItems.objects.all()
     serializer_class = FavoriteItemsSerializer
