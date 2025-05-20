@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin, TranslationInlineModelAdmin
 from nested_admin import NestedTabularInline, NestedModelAdmin
-from .models import UserProfile, Category, Course, Lesson, Exam, Questions, Options, Assignment, Certificate, Review, Favorite, Cart
+from .models import UserProfile, Category, Course, Lesson, Exam, Questions, Options, Assignment, Certificate, Favorite, Review, FavoriteItems, Cart, CartItems
 
 
 # Инлайн для Options (связь с Questions)
@@ -43,4 +43,6 @@ class TranslateAdmin(TranslationAdmin):
 
 admin.site.register(Certificate)
 admin.site.register(Favorite)
+admin.site.register(FavoriteItems)
 admin.site.register(Cart)
+admin.site.register(CartItems)
