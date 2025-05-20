@@ -6,7 +6,7 @@ class UserProfile(AbstractUser):
     CHOICES_ROLE = (
         ('student', 'student'),
         ('teacher', 'teacher'))
-    role = models.CharField(choices=CHOICES_ROLE, default='student')
+    role = models.CharField(choices=CHOICES_ROLE)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
 
@@ -20,14 +20,14 @@ class Network(models.Model):
     network_link = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return self.network_name
+        return f'{self.network_name}'
 
 # категория курсов
 class Category(models.Model):
     category_name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
-        return self.category_name
+        return f'{self.category_name}'
 
 # курс
 class Course(models.Model):
@@ -41,22 +41,26 @@ class Course(models.Model):
     level = models.CharField(choices=CHOICES_LEVEL)
     price = models.PositiveIntegerField()
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    CHOICE_IS_FREE = (
+        ('paid', 'paid'),
+        ('free', 'free'))
+    is_free = models.CharField(choices=CHOICE_IS_FREE, default='paid') # платный/бесплатный
     # created_at = models.DateField() # агай озу коргозуп берем деген кандай реализация кылынаарын
     # updated_at =  # агай озу коргозуп берем деген кандай реализация кылынаарын
 
     def __str__(self):
-        return f'{self.course_name}: {self.price}'
+        return f'{self.course_name}: {self.price} $'
 
 # урок курса
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lesson_title = models.CharField(max_length=50)
-    video_url = models.FileField(upload_to='video_urls/')
+    video_url = models.URLField()
     content = models.FileField(upload_to='contents_lesson/')
-    course = models.URLField()
+    course = models.FileField()
 
     def __str__(self):
-        return self.lesson_title
+        return f'{self.lesson_title}'
 
 # домашний задание
 class Assignment(models.Model):
@@ -67,7 +71,7 @@ class Assignment(models.Model):
     students = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.assignment_title
+        return f'{self.assignment_title}'
 
 # экзамен
 class Exam(models.Model):
@@ -75,10 +79,9 @@ class Exam(models.Model):
     course = models.ManyToManyField(Course)
     passing_score = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
     duration = models.TimeField()
-    is_free = models.BooleanField() # платный/бесплатный
 
     def __str__(self):
-        return self.exam_title
+        return f'{self.exam_title}'
 
 # вопросы экзамена
 class Questions(models.Model):
@@ -86,7 +89,7 @@ class Questions(models.Model):
     question_text = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.question_text
+        return f'{self.question_text}'
 
 # вариянты ответов вопроса
 class Options(models.Model):
@@ -95,7 +98,7 @@ class Options(models.Model):
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.option_text
+        return f'{self.option_text}'
 
 # сертификат если успешно пройден курс
 class Certificate(models.Model):
@@ -105,7 +108,7 @@ class Certificate(models.Model):
     certificate_url = models.FileField()
 
     def __str__(self):
-        return 'It is Certificates'
+        return f'It is Certificates of: {self.students}'
 
 # студенты могут оставить отзыв на курсы, но преподаватели не могут оставить отзыв на свой курс
 class Review(models.Model):
@@ -123,7 +126,7 @@ class Cart(models.Model):
     cart_owner = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.cart_owner}'
+        return f'owner of cart: {self.cart_owner}'
 
 # всё что есть в корзине
 class CartItems(models.Model):
@@ -131,14 +134,14 @@ class CartItems(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.course
+        return f'{self.course}'
 
 # подключаем избранные(курсы) к пользователью
 class Favorite(models.Model):
     favorite_owner = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.favorite_owner}'
+        return f'owner of favorite: {self.favorite_owner}'
 
 # все избранные курсы
 class FavoriteItems(models.Model):
@@ -146,4 +149,4 @@ class FavoriteItems(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.course
+        return f'{self.course}'
