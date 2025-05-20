@@ -1,14 +1,18 @@
 from rest_framework import generics, viewsets
 from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
-from .serializers import UserProfileSerializer, CategorySerializer, CourseSerializer, LessonSerializer, CertificateSerializer, ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer
+from .serializers import StudentAccountSerializer, TeacherAccountSerializer, CategorySerializer, CourseSerializer, LessonSerializer, CertificateSerializer, ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer
 
 
-class UserProfileViewSet(viewsets.ModelViewSet):
+class StudentProfileListAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = StudentAccountSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
+    # def get_queryset(self):
+    #     return UserProfile.objects.filter(id=self.request.user.id)
+
+class TeacherProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = TeacherAccountSerializer
 
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -22,15 +26,9 @@ class LessonListApiView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
-
 class CertificateListApiView(generics.ListAPIView):
     queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
-
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
 
 class ReviewListApiView(generics.ListAPIView):
     queryset = Review.objects.all()
@@ -40,12 +38,6 @@ class CartItemsListApiView(generics.ListAPIView):
     queryset = CartItems.objects.all()
     serializer_class = CartItemsSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
-
 class FavoriteItemsListApiView(generics.ListAPIView):
     queryset = FavoriteItems.objects.all()
     serializer_class = FavoriteItemsSerializer
-
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
