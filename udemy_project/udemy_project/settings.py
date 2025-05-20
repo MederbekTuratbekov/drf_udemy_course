@@ -1,4 +1,4 @@
-# кошулду: медиа, STATIC_ROOT, modeltranslation,
+# кошулду: медиа, STATIC_ROOT, modeltranslation, 'nested_admin',
 
 
 import os
@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'udemy_app',
     'rest_framework',
+    'nested_admin',
 ]
 
 MIDDLEWARE = [
