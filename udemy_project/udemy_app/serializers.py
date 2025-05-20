@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
+from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
