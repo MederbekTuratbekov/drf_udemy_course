@@ -1,52 +1,65 @@
 from rest_framework import serializers
-from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
+from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems, Exam
 
 
 # аккаунт студента
-class StudentAccountSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['username', 'last_name', 'first_name', 'email', 'password', 'role', 'full_name', 'profile_picture']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['id', 'username', 'profile_picture']
 
-# аккаунт учителя
-class TeacherAccountSerializer(serializers.ModelSerializer):
+class UserProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['username', 'last_name', 'first_name', 'email', 'password', 'role', 'full_name', 'profile_picture', 'bio']
+        fields = ['profile_picture', 'username', 'last_name', 'first_name', 'email', 'password', 'role']
         extra_kwargs = {'password': {'write_only': True}}
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('category_name',)
+        fields = ('id', 'category_name',)
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ('category', 'course_name', 'course_description', 'level', 'price', 'created_by')
+        fields = ('id', 'course_image', 'category', 'course_name', 'price', 'author', 'course_description', 'level')
+
+class CourseDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'course_name', 'price', 'author', 'course_description', 'level', 'certificate_have', 'course_lenguage', 'created_at') # 'lesson_title',  'video_url', , 'content'
+
+class ExamenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = ('id', 'exam_title')
+
+class ExamenDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = ('exam_title', 'passing_score', 'course', 'duration') # 'question_text', 'option_text',
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['course', 'lesson_title', 'video_url', 'content', 'course']
+        fields = ['id', 'course', 'lesson_title', 'video_url', 'content', 'course']
 
 class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificate
-        fields = ['students', 'course', 'issued_at', 'certificate_url']
+        fields = ['id', 'students', 'course', 'issued_at', 'certificate']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['owner_review', 'course', 'rating', 'comment', 'review_created']
+        fields = ['id', 'owner_review', 'course', 'rating', 'comment', 'review_created']
 
 class CartItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItems
-        fields = ['cart', 'course']
+        fields = ['id', 'cart', 'course']
 
 class FavoriteItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteItems
-        fields = ['favorite', 'course']
+        fields = ['id', 'favorite', 'course']
