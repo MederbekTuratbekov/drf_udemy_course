@@ -1,9 +1,9 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
 from .serializers import UserProfileSerializer, CategorySerializer, CourseSerializer, LessonSerializer, CertificateSerializer, ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer
 
 
-class UserProfileListAPIView(generics.ListAPIView):
+class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
