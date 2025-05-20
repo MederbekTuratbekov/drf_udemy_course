@@ -31,6 +31,7 @@ class Category(models.Model):
 
 # курс
 class Course(models.Model):
+    course_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
     category = models.ManyToManyField(Category)
     course_name = models.CharField(max_length=50)
     course_description = models.TextField()
@@ -40,12 +41,17 @@ class Course(models.Model):
         ('advanced', 'advanced'))
     level = models.CharField(choices=CHOICES_LEVEL)
     price = models.PositiveIntegerField()
-    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     CHOICE_IS_FREE = (
         ('paid', 'paid'),
         ('free', 'free'))
     is_free = models.CharField(choices=CHOICE_IS_FREE, default='paid') # платный/бесплатный
-    # created_at = models.DateField() # агай озу коргозуп берем деген кандай реализация кылынаарын
+    certificate_have = models.BooleanField(default=True)
+    CHOIES_LANGUAGE_COURCE = (
+        ('English', 'English'),
+        ('Russian', 'Russian'))
+    course_lenguage = models.CharField(choices=CHOIES_LANGUAGE_COURCE, default='English')
+    created_at = models.DateField(auto_now_add=True) # агай озу коргозуп берем деген кандай реализация кылынаарын
     # updated_at =  # агай озу коргозуп берем деген кандай реализация кылынаарын
 
     def __str__(self):
@@ -56,8 +62,7 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     lesson_title = models.CharField(max_length=50)
     video_url = models.URLField()
-    content = models.FileField(upload_to='contents_lesson/')
-    course = models.FileField()
+    content = models.FileField(upload_to='contents_lesson/', blank=True, null=True)
 
     def __str__(self):
         return f'{self.lesson_title}'
@@ -75,9 +80,9 @@ class Assignment(models.Model):
 
 # экзамен
 class Exam(models.Model):
-    exam_title = models.TextField()
+    exam_title = models.CharField(max_length=50)
     course = models.ManyToManyField(Course)
-    passing_score = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    passing_score = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)]) # очко учителя
     duration = models.TimeField()
 
     def __str__(self):
@@ -86,7 +91,7 @@ class Exam(models.Model):
 # вопросы экзамена
 class Questions(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    question_text = models.CharField(max_length=50)
+    question_text = models.CharField(max_length=100)
 
     def __str__(self):
         return f'{self.question_text}'
@@ -94,7 +99,7 @@ class Questions(models.Model):
 # вариянты ответов вопроса
 class Options(models.Model):
     questions = models.ForeignKey(Questions, on_delete=models.CASCADE)
-    option_text = models.CharField(max_length=30)
+    option_text = models.CharField(max_length=100, blank=True, null=True) # админканын ошибкасы чечилгиче null боло турсун
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
@@ -105,7 +110,7 @@ class Certificate(models.Model):
     students = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     issued_at = models.DateField(auto_now_add=True)
-    certificate_url = models.FileField()
+    certificate = models.FileField()
 
     def __str__(self):
         return f'It is Certificates of: {self.students}'
