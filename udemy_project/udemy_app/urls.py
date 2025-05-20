@@ -1,4 +1,5 @@
 from django.urls import path
+# from .views import RegisterView, CustomLoginView, LogoutView
 from .views import (UserProfileListAPIView, UserProfileDetailListAPIView, CategoryListAPIView, ExamListApiView, ExamDetailListApiView,
                     CourseListApiView, CourseDetailListApiView,
                     LessonListApiView, CertificateListApiView,
@@ -27,4 +28,8 @@ urlpatterns = [
     path('cart-items/', CartItemsListApiView.as_view(), name='cart_items_list'),
 
     path('favorite-items/', FavoriteItemsListApiView.as_view(), name='favorite_items_list'),
+
+    path('register/', RegisterView.as_view(), name = 'register'),
+    path('login/', CustomLoginView.as_view(), name = 'login'),
+    path('logout/', LogoutView.as_view(), name = 'logout'),
 ]
