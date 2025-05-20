@@ -1,18 +1,18 @@
 from rest_framework import generics, viewsets
 from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
-from .serializers import StudentAccountSerializer, TeacherAccountSerializer, CategorySerializer, CourseSerializer, LessonSerializer, CertificateSerializer, ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer
+from .serializers import (UserProfileSerializer, UserProfileDetailSerializer, CategorySerializer,
+                          CourseSerializer, CourseDetailSerializer, LessonSerializer, CertificateSerializer,
+                          ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer,
+                          ExamenSerializer, ExamenDetailSerializer)
 
 
-class StudentProfileListAPIView(generics.RetrieveUpdateDestroyAPIView):
+class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = StudentAccountSerializer
+    serializer_class = UserProfileSerializer
 
-    # def get_queryset(self):
-    #     return UserProfile.objects.filter(id=self.request.user.id)
-
-class TeacherProfileViewSet(viewsets.ModelViewSet):
+class UserProfileDetailListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = TeacherAccountSerializer
+    serializer_class = UserProfileDetailSerializer
 
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -21,6 +21,18 @@ class CategoryListAPIView(generics.ListAPIView):
 class CourseListApiView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+class CourseDetailListApiView(generics.ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseDetailSerializer
+
+class ExamListApiView(generics.ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = ExamenSerializer
+
+class ExamDetailListApiView(generics.ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = ExamenDetailSerializer
 
 class LessonListApiView(generics.ListAPIView):
     queryset = Lesson.objects.all()
