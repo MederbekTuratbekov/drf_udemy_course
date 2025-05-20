@@ -22,9 +22,15 @@ class LessonListApiView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
+
 class CertificateListApiView(generics.ListAPIView):
     queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
 
 class ReviewListApiView(generics.ListAPIView):
     queryset = Review.objects.all()
@@ -34,6 +40,12 @@ class CartItemsListApiView(generics.ListAPIView):
     queryset = CartItems.objects.all()
     serializer_class = CartItemsSerializer
 
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
+
 class FavoriteItemsListApiView(generics.ListAPIView):
     queryset = FavoriteItems.objects.all()
     serializer_class = FavoriteItemsSerializer
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
