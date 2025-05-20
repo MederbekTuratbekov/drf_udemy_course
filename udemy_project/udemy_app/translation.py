@@ -1,5 +1,5 @@
 from modeltranslation.translator import TranslationOptions, register
-from models import UserProfile, Category, Course, Lesson, Assignment, Exam, Questions, Options, Review
+from .models import UserProfile, Category, Course, Lesson, Assignment, Exam, Questions, Options, Review
 
 
 @register(UserProfile)
