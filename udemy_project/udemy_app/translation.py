@@ -3,7 +3,7 @@ from .models import UserProfile, Category, Course, Lesson, Assignment, Exam, Que
 
 
 @register(UserProfile)
-class TeacherProfileTranslationOptions(TranslationOptions):
+class UserProfileTranslationOptions(TranslationOptions):
     fields = ('bio',)
 
 @register(Category)
