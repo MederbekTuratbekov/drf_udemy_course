@@ -2,18 +2,19 @@ from rest_framework import serializers
 from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+# аккаунт студента
+class StudentAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['username', 'last_name', 'first_name', 'email', 'password', 'role', 'full_name', 'profile_picture']
+        extra_kwargs = {'password': {'write_only': True}}
+
+# аккаунт учителя
+class TeacherAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['username', 'last_name', 'first_name', 'email', 'password', 'role', 'full_name', 'profile_picture', 'bio']
         extra_kwargs = {'password': {'write_only': True}}
-        # full name, bio
-
-    # def full_name(self):
-    #     return f'{self.last_name} {self.first_name}'
-
-    # def bio(self, request):
-    #     if request.id == UserProfile.role.teacher:
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
