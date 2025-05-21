@@ -1,7 +1,7 @@
 from django.urls import path
-# from .views import RegisterView, CustomLoginView, LogoutView
+from .views import RegisterView, CustomLoginView, LogoutView
 from .views import (UserProfileListAPIView, UserProfileDetailListAPIView, CategoryListAPIView, ExamListApiView, ExamDetailListApiView,
-                    CourseListApiView, CourseDetailListApiView,
+                    CourseListApiView, CourseDetailListApiView, ReviewCreateAPIView,
                     LessonListApiView, CertificateListApiView,
                     ReviewListApiView, CartItemsListApiView, FavoriteItemsListApiView)
 
@@ -16,14 +16,15 @@ urlpatterns = [
     path('course/', CourseListApiView.as_view(), name= 'course_list'),
     path('course/<int:pk>/', CourseDetailListApiView.as_view(), name='course_detail'),
 
-    path('exam/', ExamListApiView.as_view(), name = 'exam_list'), # не работает
-    path('exam/<int:pk>/', ExamDetailListApiView.as_view(), name = 'exam_detail'),  # не работает
+    path('exam/', ExamListApiView.as_view(), name = 'exam_list'),
+    path('exam/<int:pk>/', ExamDetailListApiView.as_view(), name = 'exam_detail'),
 
     path('lessons/', LessonListApiView.as_view(), name='lesson_list'),
 
     path('certificates/', CertificateListApiView.as_view(), name='certificate_list'),
 
     path('reviews/', ReviewListApiView.as_view(), name='review_list'),
+    path('review_create/', ReviewCreateAPIView.as_view(), name='review_list'),
 
     path('cart-items/', CartItemsListApiView.as_view(), name='cart_items_list'),
 
