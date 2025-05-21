@@ -12,12 +12,15 @@ django-nested-admin==4.1.1
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 drf-spectacular==0.28.0
+gunicorn==23.0.0
 idna==3.10
 inflection==0.5.1
 jsonschema==4.23.0
 jsonschema-specifications==2025.4.1
 oauthlib==3.2.2
+packaging==25.0
 pillow==11.2.1
+psycopg2-binary==2.9.10
 pycparser==2.22
 PyJWT==2.9.0
 python-dotenv==1.1.0
@@ -28,6 +31,7 @@ requests==2.32.3
 requests-oauthlib==2.0.0
 router==0.1
 rpds-py==0.25.0
+setuptools==80.8.0
 sqlparse==0.5.3
 typing_extensions==4.13.2
 tzdata==2025.2

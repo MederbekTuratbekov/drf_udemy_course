@@ -1,5 +1,5 @@
 # кошулду:  медиа, STATIC_ROOT, modeltranslation, 'nested_admin', 'filters', OrderingFilter, SearchFilter, PageNumberPagination
-            # permissions, swagger, social_auth, jwt
+            # permissions, swagger, social_auth, jwt, docker
 
 
 import os
