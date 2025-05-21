@@ -6,10 +6,10 @@ from .permissions import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems, Exam
+from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems, Exam, Assignment
 from .serializers import (UserSerializer, LoginSerializer, UserProfileSerializer, UserProfileDetailSerializer, CategorySerializer,
                           CourseSerializer, CourseDetailSerializer, LessonSerializer, CertificateSerializer, ReviewCreateSerializer,
-                          ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer,
+                          ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer, CreateCourseSerializer, AssignmentSerializer,
                           ExamenSerializer, ExamenDetailSerializer)
 
 
@@ -67,6 +67,12 @@ class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+class CreateCourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CreateCourseSerializer
+
+    permission_classes = [permissions.IsAuthenticated, CreateReviewPermissions]
+
 class CourseListApiView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -79,6 +85,15 @@ class CourseListApiView(generics.ListAPIView):
 class CourseDetailListApiView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseDetailSerializer
+
+class AssignmentListApiView(generics.ListAPIView):
+    queryset = Assignment.objects.all()
+    serializer_class = AssignmentSerializer
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
 
 class ExamListApiView(generics.ListAPIView):
     queryset = Exam.objects.all()
@@ -93,9 +108,6 @@ class LessonListApiView(generics.ListAPIView):
     serializer_class = LessonSerializer
 
     permission_classes = [permissions.IsAuthenticated]
-
-    # def get_queryset(self):
-    #     return Lesson.objects.filter(author = self.request.user)
 
 class CertificateListApiView(generics.ListAPIView):
     queryset = Certificate.objects.all()
@@ -113,11 +125,11 @@ class ReviewListApiView(generics.ListAPIView):
     def get_queryset(self):
         return UserProfile.objects.filter(id=self.request.user.id)
 
-class ReviewCreateAPIView(generics.CreateAPIView):
+class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
 
-    permission_classes = [permissions.IsAuthenticated, CreatePermissions]
+    permission_classes = [permissions.IsAuthenticated, CreateReviewPermissions]
 
 class CartItemsListApiView(generics.ListAPIView):
     queryset = CartItems.objects.all()
