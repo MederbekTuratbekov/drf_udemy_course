@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems, Exam, Questions, Options
+from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems, Exam, Questions, Options, Assignment
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
@@ -63,6 +63,11 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('id', 'category_name',)
 
+class CreateCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'course_image', 'category', 'course_name', 'price', 'author', 'course_description', 'level')
+
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
@@ -77,9 +82,21 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     lesson_title = LessonSerializer(many=True, read_only=True)
     video_url = LessonSerializer(many=True, read_only=True)
     content = LessonSerializer(many=True, read_only=True)
+    created_at = serializers.DateField(format='%d-%m-%Y')
     class Meta:
         model = Course
         fields = ('id', 'course_name', 'price', 'author', 'course_description', 'level', 'certificate_have', 'course_lenguage', 'created_at', 'lesson_title',  'video_url', 'content')
+
+class AssignmentSerializer(serializers.ModelSerializer):
+    assignment_title = UserProfileSerializer(read_only=True)
+    assignment_description = UserProfileSerializer(read_only=True)
+    due_date = UserProfileSerializer(read_only=True)
+    students = UserProfileSerializer(read_only=True)
+    course = CourseSerializer(read_only=True)
+    due_date = serializers.DateField(format='%d-%m-%Y')
+    class Meta:
+        model = Assignment
+        fields = ('id', 'assignment_title', 'assignment_description', 'due_date', 'course', 'students')
 
 class OptionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,6 +124,7 @@ class CertificateSerializer(serializers.ModelSerializer):
     students = UserProfileSerializer(read_only=True)
     course = UserProfileSerializer(read_only=True)
     certificate = UserProfileSerializer(read_only=True)
+    issued_at = serializers.DateField(format='%d-%m-%Y')
     class Meta:
         model = Certificate
         fields = ['id', 'students', 'course', 'issued_at', 'certificate']
@@ -121,6 +139,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'owner_review', 'course', 'rating', 'comment', 'review_created']
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
+    review_created = serializers.DateTimeField(format='%d-%m-%Y %H:%M')
     class Meta:
         model = Review
         fields = ['id', 'owner_review', 'course', 'rating', 'comment', 'review_created']
