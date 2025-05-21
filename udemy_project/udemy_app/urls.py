@@ -1,15 +1,26 @@
-from django.urls import path
+from tkinter.font import names
+
+from django.urls import path, include
+from rest_framework import routers
 from .views import RegisterView, CustomLoginView, LogoutView
 from .views import (UserProfileListAPIView, UserProfileDetailListAPIView, CategoryListAPIView, ExamListApiView, ExamDetailListApiView,
-                    CourseListApiView, CourseDetailListApiView, ReviewCreateAPIView,
-                    LessonListApiView, CertificateListApiView,
-                    ReviewListApiView, CartItemsListApiView, FavoriteItemsListApiView)
+                    CourseListApiView, CourseDetailListApiView, ReviewViewSet, LessonListApiView, CertificateListApiView, CreateCourseViewSet,
+                    ReviewListApiView, CartItemsListApiView, FavoriteItemsListApiView, AssignmentListApiView)
+
+
+router = routers.SimpleRouter()
+router.register(r'create_review', ReviewViewSet, basename='review_crud')
+router.register(r'create_course', CreateCourseViewSet, basename='course_crud')
 
 
 urlpatterns = [
 
-    path('user/', UserProfileListAPIView.as_view(), name= 'users'),
-    path('user/<int:pk>/', UserProfileDetailListAPIView.as_view(), name= 'user_detail'),
+    path('', include(router.urls)),
+
+    path('user/', UserProfileListAPIView.as_view(), name = 'users'),
+    path('user/<int:pk>/', UserProfileDetailListAPIView.as_view(), name = 'user_detail'),
+
+    path('assignment/', AssignmentListApiView.as_view(), name = 'assignments'),
 
     path('category_list/', CategoryListAPIView.as_view(), name= 'category_list'),
 
@@ -24,7 +35,6 @@ urlpatterns = [
     path('certificates/', CertificateListApiView.as_view(), name='certificate_list'),
 
     path('reviews/', ReviewListApiView.as_view(), name='review_list'),
-    path('review_create/', ReviewCreateAPIView.as_view(), name='review_list'),
 
     path('cart-items/', CartItemsListApiView.as_view(), name='cart_items_list'),
 
