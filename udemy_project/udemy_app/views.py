@@ -37,6 +37,8 @@ class CustomLoginView(TokenObtainPairView):
 
 
 class LogoutView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         try:
             token = RefreshToken(request.data["refresh"])
@@ -58,8 +60,8 @@ class UserProfileDetailListAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
+    def get_object(self):
+        return self.request.user
 
 
 class CategoryListAPIView(generics.ListAPIView):
@@ -68,9 +70,14 @@ class CategoryListAPIView(generics.ListAPIView):
 
 
 class CreateCourseViewSet(viewsets.ModelViewSet):
-    queryset = Course.objects.all()
     serializer_class = CreateCourseSerializer
     permission_classes = [permissions.IsAuthenticated, CreateCoursePermissions]
+
+    def get_queryset(self):
+        return Course.objects.filter(author=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class CourseListApiView(generics.ListAPIView):
@@ -125,9 +132,11 @@ class ReviewListApiView(generics.ListAPIView):
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
     permission_classes = [permissions.IsAuthenticated, CreateReviewPermissions]
+
+    def get_queryset(self):
+        return Review.objects.filter(owner_review=self.request.user)
 
 
 class CartItemsListApiView(generics.ListAPIView):

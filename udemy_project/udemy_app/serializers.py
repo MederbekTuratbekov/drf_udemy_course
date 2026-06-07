@@ -152,6 +152,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
+    owner_review = serializers.HiddenField(default=serializers.CurrentUserDefault())
     review_created = serializers.DateTimeField(format='%d-%m-%Y %H:%M', read_only=True)
 
     class Meta:
