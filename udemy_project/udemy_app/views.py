@@ -2,15 +2,16 @@ from rest_framework import generics, viewsets, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework import permissions
-from .permissions import *
+from .permissions import CreateReviewPermissions, CreateCoursePermissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import UserProfile, Category, Course, Lesson, Certificate, Review, CartItems, FavoriteItems, Exam, Assignment
-from .serializers import (UserSerializer, LoginSerializer, UserProfileSerializer, UserProfileDetailSerializer, CategorySerializer,
-                          CourseSerializer, CourseDetailSerializer, LessonSerializer, CertificateSerializer, ReviewCreateSerializer,
-                          ReviewSerializer, CartItemsSerializer, FavoriteItemsSerializer, CreateCourseSerializer, AssignmentSerializer,
-                          ExamenSerializer, ExamenDetailSerializer)
+from .serializers import (UserSerializer, LoginSerializer, UserProfileSerializer, UserProfileDetailSerializer,
+                          CategorySerializer, CourseSerializer, CourseDetailSerializer, LessonSerializer,
+                          CertificateSerializer, ReviewCreateSerializer, ReviewSerializer, CartItemsSerializer,
+                          FavoriteItemsSerializer, CreateCourseSerializer, AssignmentSerializer,
+                          ExamSerializer, ExamDetailSerializer)
 
 
 class RegisterView(generics.CreateAPIView):
@@ -19,8 +20,9 @@ class RegisterView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class CustomLoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
@@ -31,120 +33,114 @@ class CustomLoginView(TokenObtainPairView):
             serializer.is_valid(raise_exception=True)
         except Exception:
             return Response({"detail": "Неверные учетные данные"}, status=status.HTTP_401_UNAUTHORIZED)
-
-        user = serializer.validated_data
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class LogoutView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
+            token = RefreshToken(request.data["refresh"])
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-# -----------------------------------------------------------------------------------------------
-class UserProfileListAPIView(generics.ListAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
 
+
+class UserProfileListAPIView(generics.ListAPIView):
+    serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return UserProfile.objects.filter(id=self.request.user.id)
+
 
 class UserProfileDetailListAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = UserProfile.objects.all()
     serializer_class = UserProfileDetailSerializer
-
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return UserProfile.objects.filter(id=self.request.user.id)
+
 
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
 class CreateCourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CreateCourseSerializer
+    permission_classes = [permissions.IsAuthenticated, CreateCoursePermissions]
 
-    permission_classes = [permissions.IsAuthenticated, CreateReviewPermissions]
 
 class CourseListApiView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    search_fields = ['category', 'course_name', ]
-    filterset_fields = ['level']
-    ordering_fields = ['certificate_have', 'level']
-    ordering = ['level']
+    search_fields = ['course_name']
+    filterset_fields = ['level', 'category']
+    ordering_fields = ['created_at', 'price']
 
-class CourseDetailListApiView(generics.ListAPIView):
+
+class CourseDetailListApiView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseDetailSerializer
 
-class AssignmentListApiView(generics.ListAPIView):
-    queryset = Assignment.objects.all()
-    serializer_class = AssignmentSerializer
 
+class AssignmentListApiView(generics.ListAPIView):
+    serializer_class = AssignmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
+        return Assignment.objects.filter(students=self.request.user)
+
 
 class ExamListApiView(generics.ListAPIView):
     queryset = Exam.objects.all()
-    serializer_class = ExamenSerializer
+    serializer_class = ExamSerializer
 
-class ExamDetailListApiView(generics.ListAPIView):
+
+class ExamDetailListApiView(generics.RetrieveAPIView):
     queryset = Exam.objects.all()
-    serializer_class = ExamenDetailSerializer
+    serializer_class = ExamDetailSerializer
+
 
 class LessonListApiView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-
     permission_classes = [permissions.IsAuthenticated]
 
-class CertificateListApiView(generics.ListAPIView):
-    queryset = Certificate.objects.all()
-    serializer_class = CertificateSerializer
 
+class CertificateListApiView(generics.ListAPIView):
+    serializer_class = CertificateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
+        return Certificate.objects.filter(student=self.request.user)
+
 
 class ReviewListApiView(generics.ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
-
     permission_classes = [permissions.IsAuthenticated, CreateReviewPermissions]
 
-class CartItemsListApiView(generics.ListAPIView):
-    queryset = CartItems.objects.all()
-    serializer_class = CartItemsSerializer
 
+class CartItemsListApiView(generics.ListAPIView):
+    serializer_class = CartItemsSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
+        return CartItems.objects.filter(cart__cart_owner=self.request.user)
+
 
 class FavoriteItemsListApiView(generics.ListAPIView):
-    queryset = FavoriteItems.objects.all()
     serializer_class = FavoriteItemsSerializer
-
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return UserProfile.objects.filter(id=self.request.user.id)
+        return FavoriteItems.objects.filter(favorite__favorite_owner=self.request.user)
