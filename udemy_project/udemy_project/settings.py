@@ -1,7 +1,3 @@
-# кошулду:  медиа, STATIC_ROOT, modeltranslation, 'nested_admin', 'filters', OrderingFilter, SearchFilter, PageNumberPagination
-            # permissions, swagger, social_auth, jwt, docker
-
-
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -131,7 +127,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', # IsAuthenticated / AllowAny
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
