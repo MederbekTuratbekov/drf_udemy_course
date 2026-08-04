@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 
 
@@ -159,3 +161,10 @@ class FavoriteItems(models.Model):
 
     def __str__(self):
         return f'{self.course}'
+
+
+@receiver(post_save, sender=UserProfile)
+def create_cart_and_favorite(sender, instance, created, **kwargs):
+    if created:
+        Cart.objects.create(cart_owner=instance)
+        Favorite.objects.create(favorite_owner=instance)
