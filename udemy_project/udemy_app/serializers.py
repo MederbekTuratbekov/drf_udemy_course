@@ -59,6 +59,14 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
         fields = ['profile_picture', 'username', 'last_name', 'first_name', 'email', 'password', 'role']
         extra_kwargs = {'password': {'write_only': True}}
 
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        instance = super().update(instance, validated_data)
+        if password:
+            instance.set_password(password)
+            instance.save()
+        return instance
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
