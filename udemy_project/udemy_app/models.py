@@ -79,7 +79,7 @@ class Assignment(models.Model):
     assignment_description = models.TextField()
     due_date = models.DateField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    students = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    students = models.ManyToManyField(UserProfile)
 
     def __str__(self):
         return f'{self.assignment_title}'
