@@ -102,7 +102,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    students = UserProfileSerializer(read_only=True)
+    students = UserProfileSerializer(many=True, read_only=True)
     course = CourseSerializer(read_only=True)
     due_date = serializers.DateField(format='%d-%m-%Y')
 
