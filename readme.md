@@ -82,6 +82,7 @@ student/teacher model with full course lifecycle management.
 ```
 drf_udemy_course/
 ├── .gitignore
+├── readme.md
 └── udemy_project/
     ├── Dockerfile
     ├── db.sqlite3
